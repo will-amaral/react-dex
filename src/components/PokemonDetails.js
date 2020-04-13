@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
-import { Spin, Layout, Typography, Row, Col, Tag, Button } from 'antd';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Spin, Layout, Typography, Row, Col, Tag, Button, Progress } from 'antd';
+import { LeftOutlined, RightOutlined, HomeOutlined } from '@ant-design/icons';
 
 import styles from 'styles';
 import bg from 'styles/bg-large.png';
@@ -12,7 +12,7 @@ const PokemonDetails = () => {
   const history = useHistory();
   const [result, setResult] = useState();
   const { Content, Header } = Layout;
-  const { Title, Text } = Typography;
+  const { Title } = Typography;
 
   useEffect(() => {
     const fetchPoke = async () => {
@@ -24,7 +24,7 @@ const PokemonDetails = () => {
 
   if (!result) return <Spin />;
 
-  const { types } = result;
+  const { types, stats, height, weight } = result;
   const primaryColor = styles.color(types[types.length - 1].type.name);
   const name = result.name.charAt(0).toUpperCase() + result.name.slice(1);
   const id = String(result.id).padStart(3, '0');
@@ -32,7 +32,8 @@ const PokemonDetails = () => {
   return (
     <Layout
       style={{
-        background: `${primaryColor} url(${bg})`,
+        backgroundColor: primaryColor,
+        backgroundImage: `url(${bg})`,
         backgroundSize: 'cover',
         minHeight: '100vh',
       }}
@@ -43,9 +44,12 @@ const PokemonDetails = () => {
           height: '20vh',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
         }}
       >
+        <Button size='large' onClick={() => history.push(`/`)} shape='circle'>
+          <HomeOutlined />
+        </Button>
         <Button
           onClick={() => history.push(`/${result.id - 1}`)}
           type='link'
@@ -76,17 +80,65 @@ const PokemonDetails = () => {
           <RightOutlined />
         </Button>
       </Header>
-      <Content>
+      <Content style={{ padding: 40 }}>
         <Row>
-          <Col span={8}></Col>
-          <Col span={8}>
+          <Col
+            md={1}
+            lg={8}
+            style={{
+              color: 'white',
+              fontSize: '1.5rem',
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
+            <div>
+              <Title level={2} style={{ color: 'white' }}>
+                Características
+              </Title>
+              <p>Altura: {height / 10}m</p>
+              <p>Peso: {weight / 10}kg</p>
+              {types.map((item) => (
+                <Tag
+                  style={{
+                    padding: '0 1.3em',
+                    fontSize: '1.3rem',
+                    lineHeight: '1.5em',
+                    borderRadius: '2em',
+                    textAlign: 'center',
+                    filter: 'brightness(115%)',
+                  }}
+                  color={styles.color(item.type.name)}
+                  key={item.type.name}
+                >
+                  {item.type.name}
+                </Tag>
+              ))}
+            </div>
+          </Col>
+          <Col sm={1} lg={8}>
             <img
               style={{ width: '100%' }}
               src={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${id}.png`}
               alt={name}
             />
           </Col>
-          <Col span={8}></Col>
+
+          <Col sm={1} lg={8} style={{ color: 'white', paddingLeft: 100 }}>
+            <Title level={2} style={{ color: 'white' }}>
+              Dados
+            </Title>
+            {stats.map((item) => (
+              <>
+                <p>{item.stat.name}</p>
+                <Progress
+                  key={item.stat.name}
+                  percent={(item.base_stat * 100) / 255}
+                  showInfo={false}
+                />
+              </>
+            ))}
+          </Col>
         </Row>
       </Content>
     </Layout>
