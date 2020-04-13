@@ -18,7 +18,12 @@ export default (props) => {
         />
       </Header>
       <Content style={styles.content}>
-        <Row gutter={[32, { xs: 8, sm: 16, md: 24, lg: 32 }]}>{props.children}</Row>
+        <Row
+          gutter={[32, { xs: 8, sm: 16, md: 24, lg: 32 }]}
+          style={{ justifyContent: 'center' }}
+        >
+          {props.children}
+        </Row>
       </Content>
     </Layout>
   );

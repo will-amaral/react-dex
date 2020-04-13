@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
+import { Switch, Route } from 'react-router-dom';
 
 import Wrapper from 'containers/Wrapper';
 import PokemonList from 'components/PokemonList';
+import PokemonDetails from 'components/PokemonDetails';
 
 export default () => {
   const [pokemons, setPokemons] = useState([]);
@@ -11,7 +13,6 @@ export default () => {
   const [next, setNext] = useState();
 
   const fetchData = async () => {
-    console.log(next);
     const url = next ? next : 'https://pokeapi.co/api/v2/pokemon';
     const { data } = await axios.get(url);
     setPokemons([...pokemons, data.results].flat());
@@ -23,10 +24,18 @@ export default () => {
   };
 
   return (
-    <InfiniteScroll pageStart={0} loadMore={fetchData} hasMore={hasMoreItens}>
-      <Wrapper>
-        <PokemonList pokemons={pokemons} />
-      </Wrapper>
-    </InfiniteScroll>
+    <Switch>
+      <Route exact path='/'>
+        <InfiniteScroll pageStart={0} loadMore={fetchData} hasMore={hasMoreItens}>
+          <Wrapper>
+            {pokemons &&
+              pokemons.map((poke) => <PokemonList key={poke.name} poke={poke} />)}
+          </Wrapper>
+        </InfiniteScroll>
+      </Route>
+      <Route path='/:id'>
+        <PokemonDetails />
+      </Route>
+    </Switch>
   );
 };

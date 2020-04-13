@@ -1,25 +1,61 @@
-import React, { useEffect, useState } from 'react';
-import { Col, Card } from 'antd';
-import axios from 'axios';
+import React from 'react';
+import { Row, Col, Card, Tag, Typography } from 'antd';
+import { useHistory } from 'react-router-dom';
 
-import CardContent from 'components/CardContent';
+import styles from 'styles';
+import bg from 'styles/bg.png';
 
-export default ({ poke }) => {
-  const [result, setResult] = useState();
-
-  useEffect(() => {
-    const fetchPoke = async () => {
-      const { data } = await axios.get(poke.url);
-      setResult(data);
-    };
-    fetchPoke();
-  }, [poke.url]);
+export default ({ details }) => {
+  if (!details) return <Card loading />;
+  const history = useHistory();
+  const { Title, Text } = Typography;
+  const { types } = details;
+  const primaryColor = styles.color(types[types.length - 1].type.name);
+  const name = details.name.charAt(0).toUpperCase() + details.name.slice(1);
+  const id = String(details.id).padStart(3, '0');
 
   return (
-    <Col xs={20} sm={16} md={12} lg={8} xl={6}>
-      <Card hoverable loading={!result ? true : false} style={{ borderRadius: 10 }}>
-        {result && <CardContent details={result} />}
-      </Card>
-    </Col>
+    <Card
+      onClick={() => history.push(`/${details.id}`)}
+      hoverable
+      style={{
+        borderRadius: 20,
+        background: `${primaryColor} url(${bg})`,
+        backgroundSize: 'cover',
+      }}
+    >
+      <Row>
+        <Col span={12}>
+          <Text
+            style={{ color: primaryColor, filter: 'brightness(65%)', fontWeight: 'bold' }}
+          >{`#${id}`}</Text>
+          <Title style={{ marginTop: 0, color: 'white' }} level={4}>
+            {name}
+          </Title>
+          {types.map((item) => (
+            <Tag
+              style={{
+                borderRadius: 15,
+                width: '50%',
+                textAlign: 'center',
+                filter: 'brightness(115%)',
+                marginBottom: 5,
+              }}
+              color={styles.color(item.type.name)}
+              key={item.type.name}
+            >
+              {item.type.name}
+            </Tag>
+          ))}
+        </Col>
+        <Col span={12}>
+          <img
+            style={{ width: '100%' }}
+            src={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${id}.png`}
+            alt={name}
+          />
+        </Col>
+      </Row>
+    </Card>
   );
 };
