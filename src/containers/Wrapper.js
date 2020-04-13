@@ -1,21 +1,16 @@
 import React from 'react';
-import { Layout, Row, Input } from 'antd';
+import { Layout, Row, Typography } from 'antd';
 
 import styles from 'styles';
 
 export default (props) => {
   const { Content, Header } = Layout;
-  const { Search } = Input;
+  const { Title } = Typography;
 
   return (
     <Layout style={styles.container}>
       <Header style={styles.header}>
-        <Search
-          style={styles.search}
-          placeholder='Buscar pokémon'
-          size='large'
-          enterButton
-        />
+        <Title>ReactDex</Title>
       </Header>
       <Content style={styles.content}>
         <Row

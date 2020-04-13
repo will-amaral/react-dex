@@ -10,6 +10,7 @@ import PokemonDetails from 'components/PokemonDetails';
 export default () => {
   const [pokemons, setPokemons] = useState([]);
   const [hasMoreItens, setHasMoreItens] = useState(true);
+  const [search, setSearch] = useState();
   const [next, setNext] = useState();
 
   const fetchData = async () => {

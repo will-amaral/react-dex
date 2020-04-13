@@ -1,6 +1,7 @@
 {
   "name": "react-dex",
   "version": "0.1.0",
+  "homepage": "https://will-amaral.github.io/react-dex/",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
