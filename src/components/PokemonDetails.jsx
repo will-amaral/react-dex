@@ -1,33 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useHistory } from 'react-router-dom';
 import { Spin, Layout, Typography, Row, Col, Tag, Button, Progress } from 'antd';
 import { LeftOutlined, RightOutlined, HomeOutlined } from '@ant-design/icons';
 
 import styles from 'styles';
 import bg from 'styles/bg-large.png';
 
-const PokemonDetails = () => {
-  const params = useParams();
-  const history = useHistory();
+const PokemonDetails = (props) => {
+  const { id, closeDetails, next, prev } = props;
   const [result, setResult] = useState();
   const { Content, Header } = Layout;
   const { Title } = Typography;
 
   useEffect(() => {
     const fetchPoke = async () => {
-      const { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${params.id}`);
+      const { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
       setResult(data);
     };
     fetchPoke();
-  }, [params]);
+  }, [id]);
 
   if (!result) return <Spin />;
 
   const { types, stats, height, weight } = result;
   const primaryColor = styles.color(types[types.length - 1].type.name);
   const name = result.name.charAt(0).toUpperCase() + result.name.slice(1);
-  const id = String(result.id).padStart(3, '0');
+  const formatedId = String(result.id).padStart(3, '0');
 
   return (
     <Layout
@@ -47,15 +45,10 @@ const PokemonDetails = () => {
           justifyContent: 'space-around',
         }}
       >
-        <Button size='large' onClick={() => history.push(`/`)} shape='circle'>
+        <Button size='large' onClick={closeDetails} shape='circle'>
           <HomeOutlined />
         </Button>
-        <Button
-          onClick={() => history.push(`/${result.id - 1}`)}
-          type='link'
-          style={{ color: 'white' }}
-          disabled={id <= 1}
-        >
+        <Button onClick={prev} type='link' style={{ color: 'white' }} disabled={id <= 1}>
           <LeftOutlined />
         </Button>
         <div
@@ -69,10 +62,10 @@ const PokemonDetails = () => {
           <Title
             level={4}
             style={{ marginTop: 0, marginLeft: 10, color: 'white' }}
-          >{`#${id}`}</Title>
+          >{`#${formatedId}`}</Title>
         </div>
         <Button
-          onClick={() => history.push(`/${result.id + 1}`)}
+          onClick={next}
           type='link'
           style={{ color: 'white' }}
           disabled={id >= 806}
@@ -119,7 +112,7 @@ const PokemonDetails = () => {
           <Col sm={1} lg={8}>
             <img
               style={{ width: '100%' }}
-              src={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${id}.png`}
+              src={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatedId}.png`}
               alt={name}
             />
           </Col>

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Row, Col, Card, Tag, Typography } from 'antd';
-import { useHistory } from 'react-router-dom';
 
 import styles from 'styles';
 import bg from 'styles/bg.png';
 
-export default ({ details }) => {
-  if (!details) return <Card loading />;
-  const history = useHistory();
+export default (props) => {
+  const { details, openDetails } = props;
   const { Title, Text } = Typography;
+  if (!details) return <Card loading />;
+
   const { types } = details;
   const primaryColor = styles.color(types[types.length - 1].type.name);
   const name = details.name.charAt(0).toUpperCase() + details.name.slice(1);
@@ -16,7 +16,7 @@ export default ({ details }) => {
 
   return (
     <Card
-      onClick={() => history.push(`/${details.id}`)}
+      onClick={() => openDetails(details.id)}
       hoverable
       style={{
         borderRadius: 20,

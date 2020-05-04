@@ -4,7 +4,8 @@ import axios from 'axios';
 
 import PokemonCard from 'components/PokemonCard';
 
-export default ({ poke }) => {
+export default (props) => {
+  const { poke, openDetails } = props;
   const [result, setResult] = useState();
 
   useEffect(() => {
@@ -17,7 +18,7 @@ export default ({ poke }) => {
 
   return (
     <Col xs={20} sm={16} md={12} lg={8} xl={6}>
-      <PokemonCard details={result} />
+      <PokemonCard details={result} openDetails={openDetails} />
     </Col>
   );
 };
