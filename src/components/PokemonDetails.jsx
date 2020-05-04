@@ -20,7 +20,19 @@ const PokemonDetails = (props) => {
     fetchPoke();
   }, [id]);
 
-  if (!result) return <Spin />;
+  if (!result)
+    return (
+      <Layout.Content
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Spin size='large' />
+      </Layout.Content>
+    );
 
   const { types, stats, height, weight } = result;
   const primaryColor = styles.color(types[types.length - 1].type.name);
@@ -122,14 +134,10 @@ const PokemonDetails = (props) => {
               Dados
             </Title>
             {stats.map((item) => (
-              <>
+              <React.Fragment key={item.stat.name}>
                 <p>{item.stat.name}</p>
-                <Progress
-                  key={item.stat.name}
-                  percent={(item.base_stat * 100) / 255}
-                  showInfo={false}
-                />
-              </>
+                <Progress percent={(item.base_stat * 100) / 255} showInfo={false} />
+              </React.Fragment>
             ))}
           </Col>
         </Row>
